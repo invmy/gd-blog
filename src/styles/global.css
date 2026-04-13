@@ -1,29 +1,25 @@
 :root {
-  --red: light-dark(rgb(255, 56, 60), rgb(255, 66, 69));
-  --orange: light-dark(rgb(255, 141, 40), rgb(255, 146, 48));
-  --yellow: light-dark(rgb(255, 204, 0), rgb(255, 214, 0));
-  --green: light-dark(rgb(52, 199, 89), rgb(48, 209, 88));
-  --mint: light-dark(rgb(0, 200, 179), rgb(0, 218, 195));
-  --teal: light-dark(rgb(0, 195, 208), rgb(0, 210, 224));
-  --cyan: light-dark(rgb(0, 192, 232), rgb(60, 211, 254));
-  --blue: light-dark(rgb(0, 136, 255), rgb(0, 145, 255));
-  --indigo: light-dark(rgb(97, 85, 245), rgb(109, 124, 255));
-  --purple: light-dark(rgb(203, 48, 224), rgb(219, 52, 242));
-  --pink: light-dark(rgb(255, 45, 85), rgb(255, 55, 95));
-  --brown: light-dark(rgb(172, 127, 94), rgb(183, 138, 102));
-  --gray: light-dark(rgb(142, 142, 147), rgb(142, 142, 147));
-  --gray2: light-dark(rgb(174, 174, 178), rgb(99, 99, 102));
-  --gray3: light-dark(rgb(199, 199, 204), rgb(72, 72, 74));
-  --gray4: light-dark(rgb(209, 209, 214), rgb(58, 58, 60));
-  --gray5: light-dark(rgb(229, 229, 234), rgb(44, 44, 46));
-  --gray6: light-dark(rgb(242, 242, 247), rgb(28, 28, 30));
+  --re: light-dark(rgb(175, 48, 41), rgb(175, 48, 41));
+  --or: light-dark(rgb(188, 82, 21), rgb(188, 82, 21));
+  --ye: light-dark(rgb(208, 162, 21), rgb(173, 131, 1));
+  --gr: light-dark(rgb(135, 154, 57), rgb(102, 128, 11));
+  --cy: light-dark(rgb(58, 169, 159), rgb(36, 131, 123));
+  --bl: light-dark(rgb(67, 133, 190), rgb(32, 94, 166));
+  --pu: light-dark(rgb(139, 126, 200), rgb(94, 64, 157));
+  --ma: light-dark(rgb(206, 93, 151), rgb(160, 47, 111));
+  --bg: light-dark(rgb(255, 252, 240), rgb(16, 15, 15));
+  --bg-2: light-dark(rgb(242, 240, 229), rgb(28, 27, 26));
+  --ui: light-dark(rgb(230, 228, 217), rgb(40, 39, 38));
+  --ui2: light-dark(rgb(218, 216, 206), rgb(52, 51, 49));
+  --ui3: light-dark(rgb(206, 205, 195), rgb(64, 62, 60));
+  --tx-3: light-dark(rgb(183, 181, 172), rgb(87, 86, 83));
+  --tx-2: light-dark(rgb(111, 110, 105), rgb(135, 133, 128));
+  --tx: light-dark(rgb(16, 15, 15), rgb(206, 205, 195));
 
-  --text: light-dark(rgb(29, 29, 31), rgb(245, 245, 247));
-  --text-2: light-dark(rgb(110, 110, 115), rgb(134, 134, 139));
-  --ui: light-dark(rgb(210, 210, 215), rgb(66, 66, 69));
-  --bg: light-dark(rgb(242, 242, 242), rgb(29, 29, 31));
-  --bg-2: light-dark(rgb(255, 255, 255), rgb(20, 20, 20));
-  --theme: light-dark(rgb(0, 102, 204), rgb(0, 145, 255));
+  --theme: var(--cy);
+
+  --fonts-family-sans: var(--font-geist);
+  --fonts-family-mono: var(--font-geist-mono);
 }
 
 [data-theme="dark"] {
@@ -36,10 +32,10 @@
 
 html {
   font-size: 62.5%;
-  font-family: var(--font-geist), var(--font-geist-mono);
+  font-family: var(--fonts-family-sans);
   color-scheme: light dark;
   background-color: var(--bg);
-  color: var(--text);
+  color: var(--tx);
 
   scrollbar-gutter: stable;
   /* 如果你希望即便预留了空间，背景也要填满那个空间 */
@@ -52,9 +48,8 @@ body {
   -webkit-font-smoothing: antialiased;
 
   font-size: clamp(1.7rem, 1rem + 1vw, 1.9rem);
-  line-height: clamp(1.5625em, 1.625em + 1vw, 1.6875em);
+  line-height: clamp(2.4rem, 2.3rem + 0.3vw, 2.7rem);
   letter-spacing: clamp(-0.023em, -0.01vw, 0.014em);
-
   padding: 2rem;
 }
 
@@ -212,11 +207,11 @@ ul.contains-task-list {
 kbd {
   display: inline-block;
   padding: 0.1em 0.4em;
-  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-family: var(--fonts-family-mono);
   font-size: 0.85em;
   line-height: 1.2;
 
-  color: var(--text);
+  color: var(--tx);
   background-color: var(--bg-2);
 
   border: 1px solid var(--ui);
@@ -256,43 +251,43 @@ kbd {
 }
 
 .markdown-alert-note {
-  border-color: var(--blue);
-  background-color: color-mix(in srgb, var(--blue), transparent 92%);
+  border-color: var(--bl);
+  background-color: color-mix(in srgb, var(--bl), transparent 92%);
 }
 .markdown-alert-note .markdown-alert-title {
-  color: var(--blue);
+  color: var(--bl);
 }
 
 .markdown-alert-tip {
-  border-color: var(--green);
-  background-color: color-mix(in srgb, var(--green), transparent 92%);
+  border-color: var(--gr);
+  background-color: color-mix(in srgb, var(--gr), transparent 92%);
 }
 .markdown-alert-tip .markdown-alert-title {
-  color: var(--green);
+  color: var(--gr);
 }
 
 .markdown-alert-important {
-  border-color: var(--purple);
-  background-color: color-mix(in srgb, var(--purple), transparent 92%);
+  border-color: var(--pu);
+  background-color: color-mix(in srgb, var(--pu), transparent 92%);
 }
 .markdown-alert-important .markdown-alert-title {
-  color: var(--purple);
+  color: var(--pu);
 }
 
 .markdown-alert-warning {
-  border-color: var(--orange);
-  background-color: color-mix(in srgb, var(--orange), transparent 92%);
+  border-color: var(--or);
+  background-color: color-mix(in srgb, var(--or), transparent 92%);
 }
 .markdown-alert-warning .markdown-alert-title {
-  color: var(--orange);
+  color: var(--or);
 }
 
 .markdown-alert-caution {
-  border-color: var(--red);
-  background-color: color-mix(in srgb, var(--red), transparent 92%);
+  border-color: var(--re);
+  background-color: color-mix(in srgb, var(--re), transparent 92%);
 }
 .markdown-alert-caution .markdown-alert-title {
-  color: var(--red);
+  color: var(--re);
 }
 
 pre {
@@ -300,9 +295,10 @@ pre {
   padding: 2rem;
   overflow-x: auto;
   font-size: 0.8em;
-  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-family: var(--fonts-family-mono);
   line-height: 1.4;
-  background-color: var(--bg-2);
+  background-color: var(--bg);
+  border: 1px solid var(--ui3);
 }
 pre > code {
   padding: 0;
@@ -313,116 +309,80 @@ pre > code {
 code,
 samp {
   font-size: 0.9em;
-  padding: 0.2em 0.3em 0.2em 0.3em; /* 增加一点垂直间距更精致 */
-  background-color: var(--ui);
-  color: inherit; /* 文字使用深色主题色，形成对比 */
-  border-radius: 1rem; /* 圆角是精致感的灵魂 */
+  padding: 0.2em 0.3em 0.2em 0.3em;
+  background-color: var(--bg-2);
+  color: inherit;
+  border-radius: 1rem;
   font-family: inherit;
   margin: 0 0.3em 0 0.3em;
 }
-
-/* 注释 (Comments) */
 .pl-c {
-  color: var(--gray);
+  color: var(--tx-2);
   font-style: italic;
 }
-
-/* 常量、数值、变量 (Constants, Numbers, Variables) */
 .pl-c1,
 .pl-s .pl-v {
-  color: var(--orange);
+  color: var(--or);
 }
-
-/* 方法、函数名 (Entity, Functions) */
 .pl-e,
 .pl-en {
-  color: var(--purple);
+  color: var(--pu);
 }
-
-/* 属性名、参数 (Variable names, identifier) */
 .pl-smi,
 .pl-s .pl-s1 {
-  color: var(--blue);
+  color: var(--bl);
 }
-
-/* HTML 标签名 (Tag names) */
 .pl-ent {
-  color: var(--blue);
+  color: var(--bl);
   font-weight: bold;
 }
-
-/* 关键词、存储类型 (Keywords, Storage) */
 .pl-k,
 .pl-kos {
-  color: var(--red);
+  color: var(--re);
   font-weight: bold;
 }
-
-/* 字符串、正则 (Strings, Regex) */
 .pl-s,
 .pl-pds,
 .pl-sr {
-  color: var(--green);
+  color: var(--gr);
 }
-
-/* 特殊变量、内置属性 (Variables, Built-ins) */
 .pl-v,
 .pl-smw {
-  color: var(--orange);
+  color: var(--or);
 }
-
-/* 错误与异常 (Built-in Underline) */
 .pl-bu {
-  color: var(--red);
+  color: var(--re);
   text-decoration: underline;
 }
-
-/* 严重错误 (Illegal) */
 .pl-ii {
-  color: #fff; /* 保持白色文字以对比红色背景 */
-  background-color: var(--red);
+  color: var(--page);
+  background-color: var(--re);
 }
-
-/* Markdown 列表 (List items) */
 .pl-ml {
-  color: var(--gray);
+  color: var(--tx-2);
 }
-
-/* Markdown 标题 (Headers) */
 .pl-mh {
   font-weight: bold;
-  color: var(--blue);
+  color: var(--bl);
 }
-
-/* Markdown 斜体 (Italic) */
 .pl-mi {
   font-style: italic;
 }
-
-/* Markdown 加粗 (Bold) */
 .pl-mb {
   font-weight: bold;
 }
-
-/* Markdown 删除线/删除行 (Deletion) */
 .pl-md {
-  color: var(--red);
-  background-color: color-mix(in srgb, var(--red), transparent 90%);
+  color: var(--re);
+  background-color: color-mix(in srgb, var(--re), transparent 90%);
 }
-
-/* Markdown 插入行 (Addition) */
 .pl-mi1 {
-  color: var(--green);
-  background-color: color-mix(in srgb, var(--green), transparent 90%);
+  color: var(--gr);
+  background-color: color-mix(in srgb, var(--gr), transparent 90%);
 }
-
-/* Markdown 修改/更变 (Modified) */
 .pl-mc {
-  color: var(--orange);
-  background-color: color-mix(in srgb, var(--orange), transparent 90%);
+  color: var(--or);
+  background-color: color-mix(in srgb, var(--or), transparent 90%);
 }
-
-/* --- Added Styles --- */
 
 /* Copy Button */
 [data-snippet-clipboard-copy-content] {
@@ -435,8 +395,8 @@ samp {
   right: 1rem;
   padding: 0.4rem 0.8rem;
   font-size: 1.2rem;
-  font-family: var(--font-geist), sans-serif;
-  color: var(--text-2);
+  font-family: var(--fonts-family-mono);
+  color: var(--tx-2);
   background-color: var(--bg);
   border: 1px solid var(--ui);
   border-radius: 6px;

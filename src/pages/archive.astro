@@ -129,7 +129,6 @@ const tags = Array.from(new Set(allEntries.flatMap((e: any) => e.tags)))
   .posts ul {
     padding: 0 !important;
     list-style: none;
-
     ::marker {
       content: none;
     }
@@ -141,12 +140,13 @@ const tags = Array.from(new Set(allEntries.flatMap((e: any) => e.tags)))
     }
   }
   .entry-date {
-    color: var(--text-2);
+    color: var(--tx-2);
     min-width: 4rem;
     margin-right: 3rem;
     flex-shrink: 0;
     font-family: ui-monospace, monospace;
     font-size: 0.9em;
+    font-weight: 500;
   }
   .entry-title {
     font-size: 0.95em;
@@ -164,7 +164,7 @@ const tags = Array.from(new Set(allEntries.flatMap((e: any) => e.tags)))
     border: none;
     transition: all 0.2s ease;
     &.active {
-      color: var(--text-2);
+      color: var(--tx-2);
     }
   }
   .posts-header {

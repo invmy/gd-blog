@@ -7,7 +7,7 @@ const nav = [
 ---
 
 <nav>
-  <h1>{SITE_TITLE}</h1>
+  <h1 class="site-title">{SITE_TITLE}</h1>
   <ul class="nav-menu">
     {
       nav.map((item) => (
@@ -19,12 +19,17 @@ const nav = [
   </ul>
 </nav>
 <style>
+  .site-title {
+    margin: 3rem 0 3rem 0;
+    * {
+      margin: 0;
+    }
+  }
   .nav-menu {
     display: flex;
     list-style: none;
     gap: 1.5rem;
     padding: 0;
     margin: 0;
-    font-weight: 500;
   }
 </style>

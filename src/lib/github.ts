@@ -50,6 +50,13 @@ const KV_KEYS = {
   README: "github_readme_data",
 };
 
+// --- In-memory Cache ---
+let lastSyncTime = 0;
+let lastFingerprint: string | null = null;
+let lastReadmeTime = 0;
+let cachedReadme: { html: string | null; etag: string | null } | null = null;
+const CACHE_TTL = 60000; // 1 minute in ms
+
 // --- API Helpers ---
 
 async function fetchGH(query: string, variables: any) {
@@ -328,6 +335,11 @@ async function getKV() {
  * Always returns the current valid fingerprint (etag).
  */
 export async function syncGitHubData(): Promise<string | null> {
+  const now = Date.now();
+  if (now - lastSyncTime < CACHE_TTL && lastFingerprint) {
+    return lastFingerprint;
+  }
+
   const kv = await getKV();
   const metadata = kv
     ? ((await kv.get(KV_KEYS.METADATA, "json")) as any)
@@ -346,6 +358,8 @@ export async function syncGitHubData(): Promise<string | null> {
     .join("|");
 
   if (savedFingerprint === currentFingerprint && kv) {
+    lastSyncTime = now;
+    lastFingerprint = currentFingerprint;
     return currentFingerprint;
   }
 
@@ -390,6 +404,8 @@ export async function syncGitHubData(): Promise<string | null> {
     );
   }
 
+  lastSyncTime = now;
+  lastFingerprint = currentFingerprint;
   return currentFingerprint;
 }
 
@@ -440,6 +456,11 @@ export async function getEntryData(number: string) {
  * Fetches the repository's README with KV caching and ETag validation.
  */
 export async function getReadme() {
+  const now = Date.now();
+  if (now - lastReadmeTime < CACHE_TTL && cachedReadme) {
+    return cachedReadme;
+  }
+
   const kv = await getKV();
   const cached = kv ? ((await kv.get(KV_KEYS.README, "json")) as any) : null;
 
@@ -457,11 +478,18 @@ export async function getReadme() {
   const res = await fetch(url, { headers });
 
   if (res.status === 304 && cached) {
-    return { html: cached.html, etag: cached.etag };
+    const result = { html: cached.html, etag: cached.etag };
+    lastReadmeTime = now;
+    cachedReadme = result;
+    return result;
   }
 
-  if (!res.ok)
-    return { html: cached?.html || null, etag: cached?.etag || null };
+  if (!res.ok) {
+    const result = { html: cached?.html || null, etag: cached?.etag || null };
+    lastReadmeTime = now;
+    cachedReadme = result;
+    return result;
+  }
 
   const html = await res.text();
   const etag = res.headers.get("etag");
@@ -480,5 +508,8 @@ export async function getReadme() {
     );
   }
 
-  return { html: transformedHTML, etag };
+  const result = { html: transformedHTML, etag };
+  lastReadmeTime = now;
+  cachedReadme = result;
+  return result;
 }

@@ -1,0 +1,22 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { getReadme } from "@/lib/github";
+
+const { html, etag } = await getReadme();
+
+Astro.cache.set({
+  maxAge: 120,
+  swr: 60,
+  tags: ["home"],
+});
+---
+
+<Layout>
+  <div class="post-body" set:html={html} />
+</Layout>
+
+<style>
+  .post-body {
+    margin-top: 5rem;
+  }
+</style>

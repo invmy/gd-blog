@@ -1,0 +1,292 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { getLiveCollection } from "astro:content";
+
+const { entries, error, cacheHint } = await getLiveCollection("data");
+
+if (cacheHint) {
+  Astro.cache.set(cacheHint);
+}
+
+if (error || !entries || entries.length === 0) {
+  return Astro.redirect("/404");
+}
+
+// Prepare data for client-side filtering
+const allEntries = entries
+  .map((entry: any) => ({
+    id: entry.id,
+    title: entry.data.title,
+    createdAt: entry.data.createdAt,
+    category: {
+      name: entry.data.category.name,
+      slug: entry.data.category.slug,
+    },
+    tags: entry.data.labels.nodes.map((n: any) => n.name),
+    url: `/categories/${entry.data.category.slug}/p/${entry.id}`,
+  }))
+  .sort(
+    (a: any, b: any) =>
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  );
+
+const categories = Array.from(
+  new Set(allEntries.map((e: any) => e.category.name)),
+)
+  .sort()
+  .map((name) => ({
+    name,
+    count: allEntries.filter((e) => e.category.name === name).length,
+  }));
+
+const tags = Array.from(new Set(allEntries.flatMap((e: any) => e.tags)))
+  .sort()
+  .map((name) => ({
+    name,
+    count: allEntries.filter((e) => e.tags.includes(name)).length,
+  }));
+---
+
+<Layout>
+  <header>
+    <h1>Archive</h1>
+  </header>
+  <div class="categories">
+    <h2>Category</h2>
+    <div class="filter-options" id="category-filters">
+      <button class="filter-btn active" data-category="all"
+        >All <sup>{allEntries.length}</sup></button
+      >
+      {
+        categories.map((cat) => (
+          <button class="filter-btn" data-category={cat.name}>
+            {cat.name}
+            <a href={`/categories/${cat.name}`}>
+              <sup>{cat.count}</sup>
+            </a>
+          </button>
+        ))
+      }
+    </div>
+  </div>
+  <div class="tags">
+    <h2>Tags</h2>
+    <div class="filter-options" id="tag-filters">
+      {
+        tags.map((tag) => (
+          <button class="filter-btn" data-tag={tag.name}>
+            {tag.name}
+            <sup>{tag.count}</sup>
+          </button>
+        ))
+      }
+    </div>
+  </div>
+  <div class="posts">
+    <div class="posts-header">
+      <h2>Posts</h2>
+      <span class="match-count-wrapper">
+        <span id="match-count">{allEntries.length}</span> articles
+      </span>
+    </div>
+    <ul id="entries-container">
+      {
+        allEntries.map((entry: any) => (
+          <li class="entry-item" data-entry-id={entry.id}>
+            <span class="entry-date">
+              {new Date(entry.createdAt).toLocaleDateString(undefined, {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })}
+            </span>
+            <a
+              href={entry.url}
+              class="entry-title"
+              transition:name={`post-title-${entry.title}`}
+            >
+              {entry.title}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <div
+      id="no-results"
+      style="display: none; padding: 2rem; color: var(--text-2); font-size: 0.9em;"
+    >
+      No articles found matching the selected filters.
+    </div>
+  </div>
+
+  <script
+    type="application/json"
+    id="archive-data"
+    set:html={JSON.stringify(allEntries)}
+  />
+</Layout>
+<style>
+  .posts ul {
+    padding: 0 !important;
+    list-style: none;
+
+    ::marker {
+      content: none;
+    }
+    li {
+      display: flex;
+      align-items: baseline;
+      margin-bottom: 0.6rem; /* 行间距 */
+      line-height: 1.5;
+    }
+  }
+  .entry-date {
+    color: var(--text-2);
+    min-width: 4rem;
+    margin-right: 3rem;
+    flex-shrink: 0;
+    font-family: ui-monospace, monospace;
+    font-size: 0.9em;
+  }
+  .entry-title {
+    font-size: 0.95em;
+  }
+  .filter-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .filter-btn {
+    font-size: 0.9em;
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+    background-color: var(--bg);
+    border: none;
+    transition: all 0.2s ease;
+    &.active {
+      color: var(--text-2);
+    }
+  }
+  .posts-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 2rem;
+  }
+</style>
+<script is:inline>
+  function initFilters() {
+    const dataElement = document.getElementById("archive-data");
+    if (!dataElement) return;
+    const allEntries = JSON.parse(dataElement.textContent);
+
+    let selectedCategory = "all";
+    let selectedTags = new Set();
+
+    const categoryFilters = document.getElementById("category-filters");
+    const tagFilters = document.getElementById("tag-filters");
+    const container = document.getElementById("entries-container");
+    const matchCount = document.getElementById("match-count");
+    const noResults = document.getElementById("no-results");
+
+    if (!categoryFilters || !tagFilters || !container) return;
+
+    const categoryBtns = categoryFilters.querySelectorAll(".filter-btn");
+    const tagBtns = tagFilters.querySelectorAll(".filter-btn");
+
+    function updateFilters() {
+      // 1. Filter entries based on selection
+      const filtered = allEntries.filter((entry) => {
+        const categoryMatch =
+          selectedCategory === "all" ||
+          entry.category.name === selectedCategory;
+        const tagMatch =
+          selectedTags.size === 0 ||
+          Array.from(selectedTags).every((tag) => entry.tags.includes(tag));
+        return categoryMatch && tagMatch;
+      });
+
+      // 2. Update Article list
+      const filteredIds = new Set(filtered.map((e) => e.id));
+      const entryElements = container.querySelectorAll(".entry-item");
+      entryElements.forEach((el) => {
+        el.style.display = filteredIds.has(el.dataset.entryId)
+          ? "flex" // Changed from grid to flex to match li style
+          : "none";
+      });
+
+      // 3. Update Match Count & No Results message
+      matchCount.textContent = filtered.length;
+      noResults.style.display = filtered.length === 0 ? "block" : "none";
+
+      // 4. Update Category button visibility (associativity)
+      const validCategories = new Set(
+        allEntries
+          .filter(
+            (entry) =>
+              selectedTags.size === 0 ||
+              Array.from(selectedTags).every((tag) => entry.tags.includes(tag)),
+          )
+          .map((entry) => entry.category.name),
+      );
+
+      categoryBtns.forEach((btn) => {
+        const cat = btn.dataset.category;
+        if (cat === "all") {
+          btn.classList.toggle("active", selectedCategory === "all");
+        } else {
+          const isValid = validCategories.has(cat);
+          btn.style.display = isValid ? "block" : "none";
+          btn.classList.toggle("active", cat === selectedCategory);
+        }
+      });
+
+      // 5. Update Tag button visibility (associativity)
+      const validTags = new Set(
+        allEntries
+          .filter((entry) => {
+            const catMatch =
+              selectedCategory === "all" ||
+              entry.category.name === selectedCategory;
+            const tagMatch =
+              selectedTags.size === 0 ||
+              Array.from(selectedTags).every((tag) => entry.tags.includes(tag));
+            return catMatch && tagMatch;
+          })
+          .flatMap((entry) => entry.tags),
+      );
+
+      tagBtns.forEach((btn) => {
+        const tag = btn.dataset.tag;
+        const isValid = validTags.has(tag) || selectedTags.has(tag);
+        btn.style.display = isValid ? "block" : "none";
+        btn.classList.toggle("active", selectedTags.has(tag));
+      });
+    }
+
+    categoryBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        selectedCategory = btn.dataset.category;
+        updateFilters();
+      });
+    });
+
+    tagBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const tag = btn.dataset.tag;
+        if (selectedTags.has(tag)) {
+          selectedTags.delete(tag);
+        } else {
+          selectedTags.add(tag);
+        }
+        updateFilters();
+      });
+    });
+
+    // Initialize state
+    updateFilters();
+  }
+
+  // Support Astro View Transitions
+  document.addEventListener("astro:page-load", initFilters);
+</script>

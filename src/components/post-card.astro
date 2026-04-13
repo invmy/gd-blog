@@ -1,0 +1,68 @@
+---
+import { formatDate } from "@/lib/utils";
+const { p } = Astro.props;
+---
+
+<a class="blog-a" href={`/categories/${p.category.slug}/p/${p.number}`}>
+  <article class="blog-card">
+    {
+      p.cover && (
+        <img
+          src={Array.isArray(p.cover) ? p.cover[0] : p.cover}
+          alt={p.title}
+          class="blog-cover"
+        />
+      )
+    }
+    <div class="blog-header">
+      <time datetime={p.lastEditedAt || p.createdAt}>
+        {p.lastEditedAt && <span>更新于</span>}
+        {formatDate(p.lastEditedAt || p.createdAt)}
+      </time>
+      <h3 transition:name=`title-${p.title}`>{p.title}</h3>
+
+      {
+        p.labels.nodes.length > 0 && (
+          <span class="labels">
+            {p.labels.nodes.map((label: any) => (
+              <span class="label">#{label.name}</span>
+            ))}
+          </span>
+        )
+      }
+    </div>
+  </article>
+</a>
+<style>
+  .blog-a {
+    text-decoration: none;
+    color: var(--text);
+    display: block;
+    border-radius: 2rem;
+    background-color: var(--bg-2);
+    break-inside: avoid;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+
+  .blog-header {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+  }
+  .blog-header h3 {
+    margin: 0;
+  }
+
+  .labels {
+    font-size: 0.7em;
+    color: var(--theme);
+    display: flex;
+    gap: 0.5em;
+    flex-wrap: wrap;
+  }
+  time {
+    font-size: 0.7em;
+    color: var(--text-2);
+  }
+</style>

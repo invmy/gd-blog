@@ -1,0 +1,19 @@
+---
+import "@/styles/global.css";
+import Head from "@/components/head.astro";
+import Nav from "@/components/nav.astro";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <Head />
+    <slot name="head" />
+  </head>
+  <body>
+    <main>
+      <Nav />
+      <slot />
+    </main>
+  </body>
+</html>

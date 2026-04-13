@@ -1,0 +1,102 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { getLiveCollection } from "astro:content";
+import { paginateSSR } from "@/lib/paginate";
+
+const { category, page: pageParam } = Astro.params;
+const currentPage = parseInt(pageParam || "1");
+
+const { entries, error, cacheHint } = await getLiveCollection("data", {
+  category: category as string,
+});
+
+if (cacheHint) {
+  Astro.cache.set(cacheHint);
+}
+Astro.cache.set({ maxAge: 600, swr: 60 });
+
+if (error || !entries || entries.length === 0) {
+  return Astro.redirect("/404");
+}
+
+const page = paginateSSR(entries, {
+  pageSize: 20,
+  currentPage,
+  baseUrl: `/categories/${category}`,
+});
+
+if (page.data.length === 0 && currentPage > 1) {
+  return Astro.redirect(`/categories/${category}`);
+}
+
+const firstEntry = entries[0].data;
+const categoryName = firstEntry.category.name;
+const emoji = firstEntry.category.emojiHTML;
+
+import PostCard from "@/components/post-card.astro";
+---
+
+<Layout>
+  <header class="category-info">
+    <div>
+      <h1>
+        <span set:html={emoji} />
+        {categoryName}
+      </h1>
+      <p>{firstEntry.category.description}</p>
+      <p class="stats">{page.total} posts</p>
+    </div>
+  </header>
+
+  <div class="grid-list">
+    {
+      page.data.map((entry) => {
+        return <PostCard p={entry.data} />;
+      })
+    }
+  </div>
+
+  <nav class="pagination">
+    <div class="nav-links">
+      {
+        page.url.prev ? (
+          <a href={page.url.prev} class="prev">
+            &larr; Newer
+          </a>
+        ) : (
+          <span />
+        )
+      }
+      <span class="page-count">
+        Page {page.currentPage} of {page.lastPage}
+      </span>
+      {
+        page.url.next ? (
+          <a href={page.url.next} class="next">
+            Older &rarr;
+          </a>
+        ) : (
+          <span />
+        )
+      }
+    </div>
+  </nav>
+</Layout>
+
+<style>
+  .category-info {
+    padding: 2rem;
+    text-align: center;
+    .stats {
+      color: var(--text-2);
+    }
+  }
+  .grid-list {
+    column-count: 1;
+    column-gap: 1em;
+    width: 100%;
+    @media (min-width: 768px) {
+      column-count: 2;
+    }
+  }
+</style>

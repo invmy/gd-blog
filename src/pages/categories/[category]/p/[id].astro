@@ -1,0 +1,177 @@
+---
+import Layout from "@/layouts/Layout.astro";
+
+import { getLiveEntry } from "astro:content";
+const { id, slug } = Astro.params;
+const { entry, error, cacheHint } = await getLiveEntry("data", id as string);
+
+if (error || !entry) {
+  return Astro.rewrite("/404");
+}
+if (cacheHint) {
+  Astro.cache.set(cacheHint);
+}
+Astro.cache.set({ maxAge: 600, swr: 60 });
+
+const data = entry?.data;
+
+import { formatDate } from "@/lib/utils";
+---
+
+<Layout>
+  <article>
+    <header class="post-header">
+      <div class="post-tags">
+        {
+          data.labels.nodes.map((label: any) => (
+            <a href={`/tags/${label.name}`}>#{label.name}</a>
+          ))
+        }
+      </div>
+      <div class={`post-time ${data.lastEditedAt ? "has-edit" : ""}`}>
+        {
+          data.lastEditedAt && (
+            <span class="created-at">
+              <span>创建于</span> {formatDate(data.createdAt)}
+            </span>
+          )
+        }
+
+        <time
+          class="display-time"
+          datetime={data.lastEditedAt || data.createdAt}
+        >
+          {
+            data.lastEditedAt
+              ? `更新于 ${formatDate(data.lastEditedAt)}`
+              : `创建于 ${formatDate(data.createdAt)}`
+          }
+        </time>
+      </div>
+
+      <h1 class="post-title" transition:name={`post-title-${data.title}`}>
+        {data.title}
+      </h1>
+    </header>
+
+    <div class="post-body" set:html={entry.rendered?.html} />
+
+    <footer>
+      <div class="post-nav">
+        {
+          data.next ? (
+            <a
+              href={`/categories/${data.next.categorySlug}/p/${data.next.id}`}
+              class="nav-next"
+            >
+              <span class="nav-label">← Newer</span>
+              <span class="nav-title">{data.next.title}</span>
+            </a>
+          ) : (
+            <div />
+          )
+        }
+        {
+          data.prev ? (
+            <a
+              href={`/categories/${data.prev.categorySlug}/p/${data.prev.id}`}
+              class="nav-prev"
+            >
+              <span class="nav-label">Older →</span>
+              <span class="nav-title">{data.prev.title}</span>
+            </a>
+          ) : (
+            <div />
+          )
+        }
+      </div>
+    </footer>
+  </article>
+</Layout>
+<style>
+  .post-header {
+    margin-top: 5rem;
+  }
+  .post-title {
+    margin: 0;
+  }
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    a {
+      color: var(--text-2);
+      &:hover {
+        color: var(--theme);
+      }
+    }
+  }
+  .post-time {
+    font-size: 0.7em;
+    color: var(--text-2);
+    position: relative;
+    display: inline-block;
+    cursor: help;
+  }
+
+  .post-time.has-edit .created-at {
+    display: none;
+  }
+  .post-time.has-edit .display-time {
+    color: var(--theme);
+  }
+
+  .post-time.has-edit:hover .display-time {
+    display: none;
+  }
+  .post-time.has-edit:hover .created-at {
+    display: inline-block;
+    color: var(--text-2);
+  }
+  .post-body {
+    margin: 7rem 0 7rem 0;
+  }
+
+  .post-nav {
+    display: flex;
+    justify-content: space-between;
+    color: var(--theme);
+    a {
+      display: flex;
+      flex-direction: column;
+      max-width: 45%;
+      text-decoration: none !important;
+
+      &:hover .nav-title {
+        text-decoration: underline;
+      }
+    }
+
+    .nav-label {
+      font-size: 0.8em;
+      color: var(--text-2);
+      margin-bottom: 1rem;
+    }
+
+    .nav-title {
+      font-weight: 500;
+      color: var(--theme);
+    }
+
+    .nav-prev {
+      text-align: right;
+      align-items: flex-end;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .post-nav {
+      flex-direction: column;
+      gap: 3rem;
+
+      a {
+        max-width: 100%;
+      }
+    }
+  }
+</style>

@@ -1,0 +1,20 @@
+---
+import { ClientRouter } from "astro:transitions";
+import { Font } from "astro:assets";
+---
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" href="/favicon.ico" />
+
+<meta name="generator" content={Astro.generator} />
+<title>Astro Basics</title>
+
+<Font cssVariable="--font-geist" />
+<Font cssVariable="--font-geist-mono" />
+<!-- <Font cssVariable="--font-noto-sans-sc" />
+<Font cssVariable="--font-noto-serif-sc" /> -->
+
+<ClientRouter />

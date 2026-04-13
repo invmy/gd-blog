@@ -1,0 +1,30 @@
+---
+import { SITE_TITLE } from "astro:env/server";
+const nav = [
+  { title: "home", href: "/" },
+  { title: "archive", href: "/archive" },
+];
+---
+
+<nav>
+  <h1>{SITE_TITLE}</h1>
+  <ul class="nav-menu">
+    {
+      nav.map((item) => (
+        <li class="nav-menu-item">
+          <a href={item.href}>{item.title}</a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+<style>
+  .nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 1.5rem;
+    padding: 0;
+    margin: 0;
+    font-weight: 500;
+  }
+</style>

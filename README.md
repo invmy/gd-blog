@@ -1,5 +1,3 @@
-[English](/README.md) | [中文](/README_zh-CN.md)
-
 ## 📝 Project Overview
 
 A modern, high-performance blog engine built with **Astro v6**, utilizing **GitHub Discussions** as a headless CMS and deployed globally on **Cloudflare Workers**.

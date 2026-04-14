@@ -1,5 +1,3 @@
-[English](/README.md) | [中文](/README_zh-CN.md)
-
 ## 📝 项目简介
 
 这是一个基于 **Astro v6** 构建的现代化、高性能博客引擎。它创新性地使用 **GitHub Discussions** 作为 Headless CMS，并无缝部署于 **Cloudflare Workers** 边缘网络。

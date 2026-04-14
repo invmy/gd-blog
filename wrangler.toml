@@ -1,0 +1,16 @@
+name = "gd-blog"
+compatibility_date = "2026-04-12"
+
+[vars]
+GITHUB_TOKEN = ""
+GITHUB_USER = ""
+GITHUB_REPO = ""
+SITE_TITLE = ""
+SITE_DESCRIPTION = ""
+
+[[kv_namespaces]]
+binding = "KV"
+
+
+[observability]
+enabled = true

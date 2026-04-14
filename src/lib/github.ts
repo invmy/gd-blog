@@ -181,7 +181,7 @@ async function parseContent(html: string, text: string) {
           <button class="copy-button" aria-label="Copy code" onclick="navigator.clipboard.writeText(this.parentElement.getAttribute('data-snippet-clipboard-copy-content')).then(() => {
             const originalText = this.innerText;
             this.innerText = 'Copied!';
-            setTimeout(() => { this.innerText = originalText; }, 2000);
+            setTimeout(() => { this.innerText = originalText; }, 500);
           })">Copy</button>
         `.trim();
         el.prepend(copyButtonHtml, { html: true });
@@ -236,7 +236,9 @@ async function parseContent(html: string, text: string) {
   // Extract description (first 200 chars) and normalize whitespace
   const cleanText = text.replace(/\s+/g, " ").trim();
   const description =
-    cleanText.length > 200 ? cleanText.substring(0, 200).trim() + "..." : cleanText;
+    cleanText.length > 200
+      ? cleanText.substring(0, 200).trim() + "..."
+      : cleanText;
 
   return {
     cover: cover.length > 0 ? cover : null,

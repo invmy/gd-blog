@@ -137,6 +137,7 @@ del {
 
 hr {
   border-color: var(--ui);
+  margin: 7rem 0 7rem 0;
 }
 
 img,
@@ -165,12 +166,13 @@ table {
   table-layout: fixed;
   word-wrap: break-word;
   word-break: break-all;
+  margin: 3rem 0 3rem 0;
 }
 table th,
 table td {
   text-align: left;
   padding: 1rem;
-  border: 1px solid var(--ui);
+  border: 1px solid var(--ui3);
 }
 
 ol,
@@ -303,6 +305,7 @@ pre {
   line-height: 1.4;
   background-color: var(--bg);
   border: 1px solid var(--ui3);
+  margin: 3rem 0 3rem 0;
 }
 pre > code {
   padding: 0;
@@ -401,7 +404,7 @@ samp {
   font-size: 1.2rem;
   font-family: var(--fonts-family-mono);
   color: var(--tx-2);
-  background-color: var(--bg);
+  background-color: var(--bg-2);
   border: 1px solid var(--ui);
   border-radius: 6px;
   cursor: pointer;

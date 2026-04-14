@@ -1,0 +1,79 @@
+---
+import { SITE_TITLE, SITE_DESCRIPTION } from "astro:env/server";
+import { i18n } from "astro:config/client";
+
+import type { GitHubDiscussion } from "@/lib/github";
+
+interface Props {
+  post: GitHubDiscussion;
+}
+
+const { post } = Astro.props;
+
+const title = post.title || SITE_TITLE;
+const description = post.description || SITE_DESCRIPTION;
+const image = new URL(`/og/${post.number}.png`, Astro.site);
+const author = post.author.login;
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: `${title} | ${SITE_TITLE}`,
+  description: description,
+  author: { "@type": "Person", name: author },
+  datePublished: post.createdAt,
+  dateModified: post.lastEditedAt || post.createdAt,
+  image: post?.cover?.[0] || image,
+  publisher: {
+    "@type": "Person",
+    name: author,
+    logo: {
+      "@type": "ImageObject",
+      url: new URL("/logo.png", Astro.site),
+    },
+  },
+};
+---
+
+<title>{`${title} | ${SITE_TITLE}`}</title>
+<meta name="title" content={`${title} | ${SITE_TITLE}`} />
+<meta name="description" content={description} />
+<link rel="canonical" href={new URL(Astro.url, Astro.site)} />
+
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={post?.cover?.[0] || image} />
+<meta property="og:image:alt" content={title} />
+<meta property="og:type" content="article" />
+<meta property="og:locale" content={i18n?.defaultLocale} />
+<meta property="og:site_name" content={SITE_TITLE} />
+<meta property="og:url" content={Astro.url} />
+<meta property="og:author" content={author} />
+<meta property="article:author" content={author} />
+<meta property="article:published_time" content={post.createdAt} />
+<meta
+  property="article:modified_time"
+  content={post.lastEditedAt || post.createdAt}
+/>
+
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta property="twitter:image" content={post?.cover?.[0] || image} />
+<meta name="twitter:image:alt" content={title} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content={author} />
+
+{
+  post?.labels.nodes.map((label: { name: string }) => {
+    return <meta property="article:tag" content={label.name} />;
+  })
+}
+
+<link
+  rel="alternate"
+  type="text/markdown"
+  href={new URL(
+    `categories/${post.category.slug}/p/${post.number}.md`,
+    Astro.site,
+  )}
+/>
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

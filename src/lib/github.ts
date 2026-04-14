@@ -28,6 +28,7 @@ export interface GitHubDiscussion {
   title: string;
   bodyText: string;
   bodyHTML?: string;
+  body: string;
   url: string;
   cover: string[] | null;
   bodyurl?: string | null;
@@ -232,9 +233,10 @@ async function parseContent(html: string, text: string) {
     .transform(new Response(preProcessedHtml))
     .text();
 
-  // Extract description (first 200 chars)
+  // Extract description (first 200 chars) and normalize whitespace
+  const cleanText = text.replace(/\s+/g, " ").trim();
   const description =
-    text.length > 200 ? text.substring(0, 200).trim() + "..." : text.trim();
+    cleanText.length > 200 ? cleanText.substring(0, 200).trim() + "..." : cleanText;
 
   return {
     cover: cover.length > 0 ? cover : null,
@@ -282,7 +284,7 @@ export async function getEntryNeighbors(number: string) {
 
 // --- GraphQL Queries ---
 const FRAGMENT = `
-  id number title bodyHTML bodyText url createdAt updatedAt lastEditedAt
+  id number title body bodyHTML bodyText url createdAt updatedAt lastEditedAt
   author { login avatarUrl url }
   category { id name emoji emojiHTML slug description }
   labels(first: 10) { nodes { name } }

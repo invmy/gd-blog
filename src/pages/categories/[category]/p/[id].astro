@@ -16,9 +16,11 @@ Astro.cache.set({ maxAge: 600, swr: 60 });
 const data = entry?.data;
 
 import { formatDate } from "@/lib/utils";
+import Head from "@/components/head-post.astro";
 ---
 
 <Layout>
+  <Head slot="head" post={data} />
   <article>
     <header class="post-header">
       <div class="post-tags">
@@ -108,10 +110,12 @@ import { formatDate } from "@/lib/utils";
   }
   .post-time {
     font-size: 0.7em;
-    color: var(--text-2);
+    color: var(--tx-2);
     position: relative;
     display: inline-block;
     cursor: help;
+    font-weight: 500;
+    font-family: var(--fonts-family-mono);
   }
 
   .post-time.has-edit .created-at {
@@ -129,7 +133,7 @@ import { formatDate } from "@/lib/utils";
     color: var(--tx-2);
   }
   .post-body {
-    margin: 7rem 0 7rem 0;
+    margin: 3rem 0 7rem 0;
   }
 
   .post-nav {

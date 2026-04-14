@@ -1,0 +1,41 @@
+---
+import { SITE_TITLE } from "astro:env/server";
+const currentYear = new Date().getFullYear();
+const links = [
+  { title: "RSS", href: "/rss.xml" },
+  { title: "Sitemap", href: "/sitemap.xml" },
+];
+---
+
+<footer>
+  <div>
+    &copy; {currentYear}
+    <span class="brand">{SITE_TITLE}</span>. Built with <a
+      href="https://astro.build"
+      target="_blank">Astro</a
+    >
+    & <a href="https://github.com/invmy/gd-blog" target="_blank">gd-blog</a>.
+  </div>
+  <div class="footer-links">
+    {links.map((link) => <a href={link.href}>{link.title}</a>)}
+  </div>
+</footer>
+
+<style>
+  footer {
+    margin-top: 7rem;
+    color: var(--tx-2);
+    font-size: 0.7em;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    * {
+      margin: 0;
+    }
+  }
+  .footer-links {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+</style>

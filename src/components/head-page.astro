@@ -1,0 +1,52 @@
+---
+import { SITE_TITLE, SITE_DESCRIPTION } from "astro:env/server";
+import { i18n } from "astro:config/client";
+interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+}
+
+const {
+  title = SITE_TITLE,
+  description = SITE_DESCRIPTION,
+  noindex = false,
+} = Astro.props;
+const image = new URL("/static/1200x630.png", Astro.site);
+
+//rss
+const { category } = Astro.params;
+console.log(Astro.params);
+const rssTitle = category
+  ? `${SITE_TITLE} - categories: ${category}`
+  : SITE_TITLE;
+const rssPath = category ? `categories/${category}/rss.xml` : "rss.xml";
+const rssURL = new URL(rssPath, Astro.site);
+---
+
+<title>{`${title} | ${SITE_TITLE}`}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={Astro.site} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={image} />
+<meta property="og:image:alt" content={title} />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content={i18n?.defaultLocale} />
+<meta property="og:site_name" content={SITE_TITLE} />
+<meta property="og:url" content={Astro.url} />
+
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={image} />
+<meta name="twitter:image:alt" content={title} />
+<meta name="twitter:card" content="summary_large_image" />
+
+<link
+  rel="alternate"
+  type="application/rss+xml"
+  title={rssTitle}
+  href={rssURL}
+/>

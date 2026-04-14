@@ -16,7 +16,7 @@
   --tx-2: light-dark(rgb(111, 110, 105), rgb(135, 133, 128));
   --tx: light-dark(rgb(16, 15, 15), rgb(206, 205, 195));
 
-  --theme: var(--cy);
+  --theme: light-dark(rgb(175, 48, 48), rgb(240, 120, 120));
 
   --fonts-family-sans: var(--font-geist);
   --fonts-family-mono: var(--font-geist-mono);
@@ -43,6 +43,10 @@ html {
 }
 
 body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+
   max-width: clamp(36rem, 80vw, 65rem);
   margin: 0 auto;
   -webkit-font-smoothing: antialiased;
@@ -461,4 +465,9 @@ samp {
     text-align: center;
     font-weight: 500;
   }
+}
+
+math-renderer {
+  display: block;
+  margin: 3rem auto;
 }

@@ -94,9 +94,9 @@ export default defineConfig({
     {
       provider: fontProviders.google(),
       name: "Noto Sans SC",
-      cssVariable: "--font-noto-sans-sc",
-      weights: [300, 400, 500, 700],
-      styles: ["normal", "italic"],
+      cssVariable: "--og-font",
+      weights: [500],
+      styles: ["normal"],
       formats: ["ttf"],
     },
   ],

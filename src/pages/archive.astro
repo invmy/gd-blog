@@ -1,6 +1,7 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import { getLiveCollection } from "astro:content";
+import Head from "@/components/head-page.astro";
 
 const { entries, error, cacheHint } = await getLiveCollection("data");
 
@@ -48,6 +49,7 @@ const tags = Array.from(new Set(allEntries.flatMap((e: any) => e.tags)))
 ---
 
 <Layout>
+  <Head slot="head" title="Archive" />
   <header>
     <h1>Archive</h1>
   </header>

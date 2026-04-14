@@ -1,3 +1,5 @@
+import { SITE_TITLE } from "astro:env/server";
+
 import type { APIRoute } from "astro";
 import { fontData } from "astro:assets";
 import { env } from "cloudflare:workers";
@@ -53,7 +55,7 @@ export const GET: APIRoute = async ({ params, request, cache }) => {
     await initializeWasm(yogaWasm, resvgWasm);
 
     if (!fontCache) {
-      const fontPath = fontData["--font-noto-sans-sc"]?.[0]?.src?.[0]?.url;
+      const fontPath = fontData["--og-font"]?.[0]?.src?.[0]?.url;
       console.log("🔍 Font Path from fontData:", fontPath);
 
       if (!fontPath) {
@@ -68,7 +70,6 @@ export const GET: APIRoute = async ({ params, request, cache }) => {
 
       fontCache = await fontRes.arrayBuffer();
     }
-
     const svg = await satori(
       {
         type: "div",
@@ -78,80 +79,133 @@ export const GET: APIRoute = async ({ params, request, cache }) => {
             width: "100%",
             display: "flex",
             flexDirection: "column",
-            backgroundColor: "#000",
-            color: "#fff",
-            fontFamily: "MiSans",
-            border: "1px solid #222",
+            backgroundColor: "#100f0f",
+            color: "#cecdc3",
+            fontFamily: "font",
+            padding: "40px",
           },
           children: [
             {
               type: "div",
               props: {
                 style: {
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  backgroundImage:
+                    "radial-gradient(circle at 2px 2px, #222 1px, transparent 0)",
+                  backgroundSize: "40px 40px",
+                  opacity: 0.3,
+                },
+              },
+            },
+            {
+              type: "div",
+              props: {
+                style: {
                   display: "flex",
-                  padding: "30px 40px",
-                  borderBottom: "1px solid #222",
-                  alignItems: "center",
+                  flexDirection: "column",
+                  flex: 1,
+                  border: "1px solid rgba(255, 252, 240, 0.1)",
+                  borderRadius: "12px",
+                  backgroundColor: "rgba(16, 15, 15, 0.8)",
+                  overflow: "hidden",
                 },
                 children: [
                   {
                     type: "div",
                     props: {
                       style: {
-                        border: "1px solid #444",
-                        borderRadius: "8px",
-                        padding: "4px 12px",
-                        color: "#888",
-                        fontSize: "24px",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        padding: "30px 40px",
+                        borderBottom: "1px solid rgba(255, 252, 240, 0.05)",
                       },
-                      children: "#" + entry.id,
+                      children: [
+                        {
+                          type: "div",
+                          props: {
+                            style: {
+                              fontSize: "24px",
+                              letterSpacing: "-0.05em",
+                              display: "flex",
+                              alignItems: "center",
+                            },
+                            children: [SITE_TITLE],
+                          },
+                        },
+                        {
+                          type: "div",
+                          props: {
+                            style: {
+                              padding: "4px 12px",
+                              fontSize: "18px",
+                            },
+                            children: `${entry.data.category.name}`,
+                          },
+                        },
+                      ],
                     },
                   },
-                ],
-              },
-            },
-            {
-              type: "div",
-              props: {
-                style: {
-                  display: "flex",
-                  flex: 1,
-                  padding: "0 40px",
-                  alignItems: "center",
-                  justifyContent: "center",
-                },
-                children: {
-                  type: "h1",
-                  props: {
-                    style: {
-                      fontSize: "85px",
-                      fontWeight: "300",
-                      textAlign: "center",
-                      lineHeight: "1.3",
+                  {
+                    type: "div",
+                    props: {
+                      style: {
+                        display: "flex",
+                        flexDirection: "column",
+                        flex: 1,
+                        padding: "0 60px",
+                        justifyContent: "center",
+                      },
+                      children: [
+                        {
+                          type: "div",
+                          props: {
+                            style: {
+                              fontSize: "48px",
+                              marginBottom: "16px",
+                            },
+                            children: `# ${entry.data.number}`,
+                          },
+                        },
+                        {
+                          type: "h1",
+                          props: {
+                            style: {
+                              fontSize: "72px",
+                              lineHeight: "1.1",
+                              margin: 0,
+                              letterSpacing: "-0.04em",
+                              color: "#fff",
+                            },
+                            children: entry.data.title,
+                          },
+                        },
+                      ],
                     },
-                    children: entry.data.title,
                   },
-                },
-              },
-            },
-            {
-              type: "div",
-              props: {
-                style: {
-                  display: "flex",
-                  justifyContent: "space-between",
-                  padding: "30px 40px",
-                  borderTop: "1px solid #222",
-                  color: "#666",
-                },
-                children: [
+
                   {
-                    type: "span",
-                    props: { children: formatDate(entry.data.createdAt) },
-                  },
-                  {
-                    type: "span",
-                    props: { children: entry.data.category.name },
+                    type: "div",
+                    props: {
+                      style: {
+                        display: "flex",
+                        justifyContent: "space-between",
+                        padding: "30px 40px",
+                        backgroundColor: "rgba(255, 252, 240, 0.02)",
+                        color: "#666",
+                        fontSize: "20px",
+                      },
+                      children: [
+                        {
+                          type: "span",
+                          props: { children: formatDate(entry.data.createdAt) },
+                        },
+                      ],
+                    },
                   },
                 ],
               },
@@ -162,18 +216,9 @@ export const GET: APIRoute = async ({ params, request, cache }) => {
       {
         width: 1200,
         height: 630,
-        fonts: [
-          {
-            name: "MiSans",
-            data: fontCache,
-            weight: 400,
-            style: "normal",
-          },
-        ],
+        fonts: [{ name: "font", data: fontCache }],
       },
     );
-
-    // 4. Resvg 渲染 PNG
     const resvg = new Resvg(svg, {
       fitTo: { mode: "width", value: 1200 },
     });

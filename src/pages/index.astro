@@ -1,7 +1,7 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import { getReadme } from "@/lib/github";
-
+import Head from "@/components/head-page.astro";
 const { html, etag } = await getReadme();
 
 Astro.cache.set({
@@ -12,6 +12,6 @@ Astro.cache.set({
 ---
 
 <Layout>
-  <h1>Home</h1>
-  <div class="post-body" set:html={html} />
+  <Head slot="head" title="Home" />
+  <div set:html={html} />
 </Layout>

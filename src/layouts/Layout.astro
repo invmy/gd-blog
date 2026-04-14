@@ -2,10 +2,12 @@
 import "@/styles/global.css";
 import Head from "@/components/head.astro";
 import Nav from "@/components/nav.astro";
+import Footer from "@/components/footer.astro";
+import { i18n } from "astro:config/client";
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={i18n?.defaultLocale}>
   <head>
     <Head />
     <slot name="head" />
@@ -15,5 +17,6 @@ import Nav from "@/components/nav.astro";
       <Nav />
       <slot />
     </main>
+    <Footer />
   </body>
 </html>

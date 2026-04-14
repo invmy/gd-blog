@@ -34,9 +34,11 @@ const categoryName = firstEntry.category.name;
 const emoji = firstEntry.category.emojiHTML;
 
 import PostCard from "@/components/post-card.astro";
+import Head from "@/components/head-page.astro";
 ---
 
 <Layout>
+  <Head slot="head" title={`Category: ${categoryName}`} />
   <header class="category-info">
     <div>
       <h1>

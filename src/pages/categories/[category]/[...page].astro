@@ -20,7 +20,7 @@ if (error || !entries || entries.length === 0) {
 }
 
 const page = paginateSSR(entries, {
-  pageSize: 20,
+  pageSize: 30,
   currentPage,
   baseUrl: `/categories/${category}`,
 });
@@ -63,19 +63,21 @@ import Head from "@/components/head-page.astro";
       {
         page.url.prev ? (
           <a href={page.url.prev} class="prev">
-            &larr; Newer
+            &larr;
           </a>
         ) : (
           <span />
         )
       }
       <span class="page-count">
-        Page {page.currentPage} of {page.lastPage}
+        <span style="color: var(--theme)">{page.currentPage}</span> / <span
+          >{page.lastPage}</span
+        >
       </span>
       {
         page.url.next ? (
           <a href={page.url.next} class="next">
-            Older &rarr;
+            &rarr;
           </a>
         ) : (
           <span />
@@ -90,7 +92,7 @@ import Head from "@/components/head-page.astro";
     padding: 2rem;
     text-align: center;
     .stats {
-      color: var(--text-2);
+      color: var(--tx-2);
     }
   }
   .grid-list {
@@ -100,5 +102,36 @@ import Head from "@/components/head-page.astro";
     @media (min-width: 768px) {
       column-count: 2;
     }
+  }
+  .nav-links {
+    display: grid;
+    /* 核心：定义三列，左右两列各占 1份剩余空间 (1fr) */
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+    margin-top: 7rem;
+  }
+
+  .page-count {
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .prev {
+    justify-self: end; /* 箭头向右靠，贴近文字 */
+  }
+
+  .next {
+    justify-self: start; /* 箭头向左靠，贴近文字 */
+  }
+
+  /* 即使是空的占位符，也会占据 1fr 的宽度 */
+  .nav-links span:not(.page-count) {
+    display: block;
+    width: 1em; /* 保持和箭头一样的预留宽度 */
   }
 </style>

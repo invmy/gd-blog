@@ -17,6 +17,7 @@ const data = entry?.data;
 
 import { formatDate } from "@/lib/utils";
 import Head from "@/components/head-post.astro";
+import Giscus from "@/components/giscus.astro";
 ---
 
 <Layout>
@@ -89,6 +90,7 @@ import Head from "@/components/head-post.astro";
       </div>
     </footer>
   </article>
+  <Giscus id={data.number} server:defer />
 </Layout>
 <style>
   .post-header {
@@ -140,6 +142,7 @@ import Head from "@/components/head-post.astro";
     display: flex;
     justify-content: space-between;
     color: var(--theme);
+    margin-bottom: 7rem;
     a {
       display: flex;
       flex-direction: column;

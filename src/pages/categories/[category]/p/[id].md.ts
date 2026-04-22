@@ -13,7 +13,7 @@ export const GET: APIRoute = async ({ params, cache }) => {
   if (cacheHint) {
     cache.set(cacheHint);
   }
-  cache.set({ maxAge: 86400, swr: 3600 });
+  cache.set({ maxAge: 60, swr: 30 });
 
   const { data } = entry;
   const tags = data.labels.nodes.map((label: { name: string }) => label.name);

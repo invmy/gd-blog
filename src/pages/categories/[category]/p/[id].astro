@@ -11,7 +11,7 @@ if (error || !entry) {
 if (cacheHint) {
   Astro.cache.set(cacheHint);
 }
-Astro.cache.set({ maxAge: 600, swr: 60 });
+Astro.cache.set({ maxAge: 60, swr: 60 });
 
 const data = entry?.data;
 

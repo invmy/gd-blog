@@ -32,27 +32,27 @@ export default defineConfig({
       GITHUB_TOKEN: envField.string({
         context: "server",
         access: "secret",
-        optional: true,
+        optional: false,
       }),
       GITHUB_USER: envField.string({
         context: "server",
         access: "public",
-        optional: true,
+        optional: false,
       }),
       GITHUB_REPO: envField.string({
         context: "server",
         access: "public",
-        optional: true,
+        optional: false,
       }),
       SITE_TITLE: envField.string({
         context: "server",
         access: "public",
-        optional: true,
+        optional: false,
       }),
       SITE_DESCRIPTION: envField.string({
         context: "server",
         access: "public",
-        optional: true,
+        optional: false,
       }),
     },
   },

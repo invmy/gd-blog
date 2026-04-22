@@ -8,7 +8,7 @@ const { entries, error, cacheHint } = await getLiveCollection("data");
 if (cacheHint) {
   Astro.cache.set(cacheHint);
 }
-
+Astro.cache.set({ maxAge: 60, swr: 30 });
 if (error || !entries || entries.length === 0) {
   return Astro.redirect("/404");
 }

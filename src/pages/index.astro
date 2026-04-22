@@ -5,8 +5,8 @@ import Head from "@/components/head-page.astro";
 const { html, etag } = await getReadme();
 
 Astro.cache.set({
-  maxAge: 120,
-  swr: 60,
+  maxAge: 60,
+  swr: 30,
   tags: ["home"],
 });
 ---

@@ -67,7 +67,7 @@ import Giscus from "@/components/giscus.astro";
               href={`/categories/${data.next.categorySlug}/p/${data.next.id}`}
               class="nav-next"
             >
-              <span class="nav-label">← Newer</span>
+              <span class="nav-label">{formatDate(data.next.createdAt)}</span>
               <span class="nav-title">{data.next.title}</span>
             </a>
           ) : (
@@ -80,7 +80,7 @@ import Giscus from "@/components/giscus.astro";
               href={`/categories/${data.prev.categorySlug}/p/${data.prev.id}`}
               class="nav-prev"
             >
-              <span class="nav-label">Older →</span>
+              <span class="nav-label">{formatDate(data.prev.createdAt)}</span>
               <span class="nav-title">{data.prev.title}</span>
             </a>
           ) : (

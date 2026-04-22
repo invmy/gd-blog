@@ -99,6 +99,7 @@ export function Loader(): LiveLoader<
                   id: next.number.toString(),
                   title: next.title,
                   categorySlug: next.category.slug,
+                  createdAt: next.createdAt,
                 }
               : null,
             prev: prev
@@ -106,6 +107,7 @@ export function Loader(): LiveLoader<
                   id: prev.number.toString(),
                   title: prev.title,
                   categorySlug: prev.category.slug,
+                  createdAt: prev.createdAt,
                 }
               : null,
           },

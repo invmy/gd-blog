@@ -472,7 +472,7 @@ export async function getReadme() {
   const headers: Record<string, string> = {
     Authorization: `Bearer ${GITHUB_TOKEN}`,
     "User-Agent": "Astro-Loader",
-    Accept: "application/vnd.github.html",
+    Accept: "application/vnd.github.v3.html",
   };
 
   if (cached?.etag) {
@@ -480,7 +480,6 @@ export async function getReadme() {
   }
 
   const res = await fetch(url, { headers });
-
   if (res.status === 304 && cached) {
     const result = { html: cached.html, etag: cached.etag };
     lastReadmeTime = now;

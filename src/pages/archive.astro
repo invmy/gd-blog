@@ -96,22 +96,26 @@ const tags = Array.from(new Set(allEntries.flatMap((e: any) => e.tags)))
       {
         allEntries.map((entry: any) => (
           <li class="entry-item" data-entry-id={entry.id}>
-            <span class="entry-date">
-              {new Date(entry.createdAt).toLocaleDateString(
-                i18n?.defaultLocale,
+            <div class="entry-left">
+              <span class="pinned-icon">{entry.isPinned ? "📌" : ""}</span>
+              <span class="entry-date">
                 {
-                  year: "numeric",
-                  month: "2-digit",
-                  day: "2-digit",
-                },
-              )}
-            </span>
+                  new Date(entry.createdAt).toLocaleDateString(
+                    i18n?.defaultLocale,
+                    {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                    },
+                  )
+                }
+              </span>
+            </div>
             <a
               href={entry.url}
               class="entry-title"
               transition:name={`post-title-${entry.title}`}
             >
-              {entry.isPinned && <span class="pinned-icon">📌</span>}
               {entry.title}
             </a>
           </li>
@@ -147,15 +151,21 @@ const tags = Array.from(new Set(allEntries.flatMap((e: any) => e.tags)))
     }
   }
   .pinned-icon {
-    margin-right: 0.5rem;
+    width: 2rem;
+    flex-shrink: 0;
     font-size: 0.9em;
-    vertical-align: middle;
+    display: inline-flex;
+    justify-content: center;
+  }
+  .entry-left {
+    display: flex;
+    align-items: baseline;
+    margin-right: 3rem;
+    flex-shrink: 0;
   }
   .entry-date {
     color: var(--tx-2);
     min-width: 4rem;
-    margin-right: 3rem;
-    flex-shrink: 0;
     font-size: 0.9em;
     font-weight: 500;
   }

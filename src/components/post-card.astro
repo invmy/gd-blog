@@ -16,13 +16,11 @@ const { p } = Astro.props;
     }
     <div class="blog-header">
       <time datetime={p.lastEditedAt || p.createdAt}>
+        {p.isPinned && <span class="pinned-icon">📌</span>}
         {p.lastEditedAt && <span>更新于</span>}
         {formatDate(p.lastEditedAt || p.createdAt)}
       </time>
-      <h3 transition:name=`title-${p.title}`>
-        {p.isPinned && <span class="pinned-icon">📌</span>}
-        {p.title}
-      </h3>
+      <h3 transition:name=`title-${p.title}`>{p.title}</h3>
 
       {
         p.labels.nodes.length > 0 && (
@@ -39,8 +37,8 @@ const { p } = Astro.props;
 <style>
   .pinned-icon {
     margin-right: 0.5rem;
-    font-size: 0.9em;
-    vertical-align: middle;
+    font-size: 1.2em;
+    vertical-align: sub;
   }
   .blog-a {
     text-decoration: none;

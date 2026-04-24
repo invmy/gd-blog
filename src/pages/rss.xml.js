@@ -16,7 +16,7 @@ export async function GET(context) {
       title: entry.data.title,
       description: entry.data.description || "",
       pubDate: new Date(entry.data.createdAt || entry.data.pubDate),
-      link: `${context.site}${entry.data.category.slug}/p/${entry.id}`,
+      link: `${context.site}categories/${entry.data.category.slug}/p/${entry.id}`,
       content: entry.data.bodyHTML,
     })),
     customData: `<language>${i18n?.defaultLocale}</language>`,

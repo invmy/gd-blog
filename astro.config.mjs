@@ -10,7 +10,7 @@ import cloudflare from "@astrojs/cloudflare";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "http://localhost:4321/",
+  site: "https://gd-blog.iiv.workers.dev/",
   output: "server",
   i18n: {
     defaultLocale: "zh-cn",

@@ -149,7 +149,7 @@ async function parseContent(html: string, text: string) {
           if (dataUrl) {
             const id = dataUrl.split("/discussions/").pop();
             if (id && /^\d+$/.test(id)) {
-              el.setAttribute("href", `/-/p/${id}`);
+              el.setAttribute("href", `/categories/-/p/${id}`);
             }
           }
         }
@@ -296,7 +296,7 @@ const FRAGMENT = `
 const INITIAL_QUERY = `
   query($owner: String!, $name: String!, $first: Int!) {
     repository(owner: $owner, name: $name) {
-      pinnedDiscussions(first: 6) { nodes { discussion { id } } }
+      pinnedDiscussions(first: 6) { nodes { discussion { ${FRAGMENT} } } }
       discussionCategories(first: 20) { nodes { id name emoji emojiHTML slug description } }
       discussions(first: $first, orderBy: {field: CREATED_AT, direction: DESC}) {
         pageInfo { hasNextPage endCursor }
@@ -381,8 +381,21 @@ export async function syncGitHubData(): Promise<string | null> {
   );
 
   let discussions: GitHubDiscussion[] = [];
-  for (const node of repo.discussions.nodes)
-    discussions.push(await mapPost(node, pinnedIds));
+  const existingIds = new Set<string>();
+
+  // Add pinned discussions first to ensure they are always included
+  for (const node of repo.pinnedDiscussions.nodes) {
+    const discussion = await mapPost(node.discussion, pinnedIds);
+    discussions.push(discussion);
+    existingIds.add(discussion.id);
+  }
+
+  for (const node of repo.discussions.nodes) {
+    if (!existingIds.has(node.id)) {
+      discussions.push(await mapPost(node, pinnedIds));
+      existingIds.add(node.id);
+    }
+  }
 
   let { hasNextPage, endCursor: after } = repo.discussions.pageInfo;
   while (hasNextPage) {
@@ -393,8 +406,12 @@ export async function syncGitHubData(): Promise<string | null> {
       after,
     });
     const disco = next.repository.discussions;
-    for (const node of disco.nodes)
-      discussions.push(await mapPost(node, pinnedIds));
+    for (const node of disco.nodes) {
+      if (!existingIds.has(node.id)) {
+        discussions.push(await mapPost(node, pinnedIds));
+        existingIds.add(node.id);
+      }
+    }
     hasNextPage = disco.pageInfo.hasNextPage;
     after = disco.pageInfo.endCursor;
   }

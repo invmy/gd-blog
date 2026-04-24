@@ -25,11 +25,7 @@ import Giscus from "@/components/giscus.astro";
   <article>
     <header class="post-header">
       <div class="post-tags">
-        {
-          data.labels.nodes.map((label: any) => (
-            <a href={`/tags/${label.name}`}>#{label.name}</a>
-          ))
-        }
+        {data.labels.nodes.map((label: any) => <span>#{label.name}</span>)}
       </div>
       <div class={`post-time ${data.lastEditedAt ? "has-edit" : ""}`}>
         {
@@ -103,11 +99,8 @@ import Giscus from "@/components/giscus.astro";
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
-    a {
+    span {
       color: var(--tx-2);
-      &:hover {
-        color: var(--theme);
-      }
     }
   }
   .post-time {

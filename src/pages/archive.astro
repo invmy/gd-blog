@@ -25,11 +25,12 @@ const allEntries = entries
     },
     tags: entry.data.labels.nodes.map((n: any) => n.name),
     url: `/categories/${entry.data.category.slug}/p/${entry.id}`,
+    isPinned: entry.data.isPinned,
   }))
-  .sort(
-    (a: any, b: any) =>
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-  );
+  .sort((a: any, b: any) => {
+    if (a.isPinned !== b.isPinned) return a.isPinned ? -1 : 1;
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  });
 
 const categories = Array.from(
   new Set(allEntries.map((e: any) => e.category.name)),
@@ -110,6 +111,7 @@ const tags = Array.from(new Set(allEntries.flatMap((e: any) => e.tags)))
               class="entry-title"
               transition:name={`post-title-${entry.title}`}
             >
+              {entry.isPinned && <span class="pinned-icon">📌</span>}
               {entry.title}
             </a>
           </li>
@@ -143,6 +145,11 @@ const tags = Array.from(new Set(allEntries.flatMap((e: any) => e.tags)))
       margin-bottom: 0.6rem; /* 行间距 */
       line-height: 1.5;
     }
+  }
+  .pinned-icon {
+    margin-right: 0.5rem;
+    font-size: 0.9em;
+    vertical-align: middle;
   }
   .entry-date {
     color: var(--tx-2);

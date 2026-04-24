@@ -49,6 +49,16 @@ export function Loader(): LiveLoader<
           filtered = filtered.filter((d) => d.isPinned);
         }
 
+        // Sort: Pinned first, then by createdAt descending
+        filtered.sort((a, b) => {
+          if (a.isPinned !== b.isPinned) {
+            return a.isPinned ? -1 : 1;
+          }
+          return (
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+        });
+
         const latestUpdateTimestamp = filtered.reduce(
           (max, d) =>
             Math.max(max, new Date(d.updatedAt || d.createdAt).getTime()),
